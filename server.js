@@ -1,24 +1,33 @@
 const express =require('express')
-const dotenv =require('dotenv')
 const path =require('path');
+const config = require("./config/index.js")
+const connect=require('./mongo/connection.js');
 
-const cors =require('cors')
+
+
 
 
 const app=express();
-dotenv.config();
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(cors())
 
-app.set('views',path.join(__dirname,'views'));
+
+app.set('views',path.join(__dirname,'view'));
 app.set('view engine','ejs');
+app.use('/public', express.static('public'));
 
-app.get("/",(req,res)=>{
-  res.render('UI');
+app.use("/login",(req,res)=>{
+  res.render('Login')
 })  
+app.use("/",(req,res)=>{
+  res.render('Register')
+});
+app.use("/home",(req,res)=>{
+  res.render('home')
+});
 
-app.listen(process.env.PORT,()=>{
-    console.log('server runninng ')
+app.listen(config.PORT,()=>{
+  connect()
+    console.log('server runninng : ' + config.PORT)
 })
